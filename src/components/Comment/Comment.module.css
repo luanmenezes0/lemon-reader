@@ -1,0 +1,21 @@
+.CommentCard {
+  margin-top: 5px;
+  border-left: solid 5px #2e7031;
+}
+.Comment {
+  padding: 2px 10px !important;
+}
+
+.Reply {
+  background-color: "#f0ebf7";
+  margin: 2px 0 0 5px;
+  border-left: solid 5px #482880;
+}
+
+.UserName {
+  font-weight: bold
+}
+
+.CommentPoints {
+  color: #9778ce;
+}
