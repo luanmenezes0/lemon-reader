@@ -2,27 +2,30 @@ import React, { Component } from "react";
 import { Typography, Button, ButtonGroup } from "@material-ui/core";
 import { connect } from "react-redux";
 import { sortPosts } from "../../store/actions/posts";
-import styles from './Panel.module.css'
+import styles from "./Panel.module.css";
 
 export class Panel extends Component {
   state = {
-    selectedFilter: 'hot',
-  }
+    selectedFilter: "hot",
+  };
 
   sortedPostsHandler = (sort) => {
-    this.setState({ selectedFilter: sort })
-    this.props.onSortPosts(this.props.subredditName, sort)
-  }
+    this.setState({ selectedFilter: sort });
+    this.props.onSortPosts(this.props.subredditName, sort);
+  };
 
   render() {
     let banner;
-    if (this.props.subredditName === 'all') {
+    if (this.props.subredditName === "all") {
       banner = (
         <>
           <Typography variant="h2">Welcome to the Front Page!</Typography>
-          <Typography variant="h6">Search for a community or just browse for the most popular posts of the day</Typography>
+          <Typography variant="h6">
+            Search for a community or just browse for the most popular posts of
+            the day
+          </Typography>
         </>
-      )
+      );
     } else {
       banner = (
         <>
@@ -31,7 +34,7 @@ export class Panel extends Component {
           <Typography variant="h6">{this.props.subDescription}</Typography>
           <img src={this.props.icon_img} alt={this.props.icon_img} />
         </>
-      )
+      );
     }
     return (
       <>
@@ -42,11 +45,18 @@ export class Panel extends Component {
 
         <div className={styles.SortArea}>
           <Typography variant="body1">sort by: </Typography>
-          <ButtonGroup color="secondary" aria-label="outlined primary button group">
-            {['hot', 'top', 'new', 'controversial'].map((sortButton) => (
+          <ButtonGroup
+            color="secondary"
+            aria-label="outlined primary button group"
+          >
+            {["hot", "top", "new", "controversial"].map((sortButton) => (
               <Button
                 key={sortButton}
-                variant={this.state.selectedFilter === sortButton ? 'contained' : 'outlined'}
+                variant={
+                  this.state.selectedFilter === sortButton
+                    ? "contained"
+                    : "outlined"
+                }
                 onClick={() => this.sortedPostsHandler(sortButton)}
               >
                 {sortButton}
@@ -67,7 +77,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onSortPosts: (subredditName, selectedFilter) => dispatch(sortPosts(subredditName, selectedFilter))
+  onSortPosts: (subredditName, selectedFilter) =>
+    dispatch(sortPosts(subredditName, selectedFilter)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Panel);
