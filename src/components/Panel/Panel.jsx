@@ -5,12 +5,7 @@ import { sortPosts } from "../../store/actions/posts";
 import styles from "./Panel.module.css";
 
 export class Panel extends Component {
-  state = {
-    selectedFilter: "hot",
-  };
-
   sortedPostsHandler = (sort) => {
-    this.setState({ selectedFilter: sort });
     this.props.onSortPosts(this.props.subredditName, sort);
   };
 
@@ -53,9 +48,7 @@ export class Panel extends Component {
               <Button
                 key={sortButton}
                 variant={
-                  this.state.selectedFilter === sortButton
-                    ? "contained"
-                    : "outlined"
+                  this.props.sortBy === sortButton ? "contained" : "outlined"
                 }
                 onClick={() => this.sortedPostsHandler(sortButton)}
               >
@@ -71,6 +64,7 @@ export class Panel extends Component {
 
 const mapStateToProps = (state) => ({
   subreddit: state.posts.subredditName,
+  sortBy: state.posts.sortBy,
   subTitle: state.posts.subredditInfo.title,
   subDescription: state.posts.subredditInfo.public_description,
   subname: state.posts.subredditInfo.display_name_prefixed,

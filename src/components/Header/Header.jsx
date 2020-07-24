@@ -5,13 +5,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { withRouter, Link } from "react-router-dom";
 
 class Header extends Component {
-  state = {
-    subName: '' 
-  }
 
   submitHandler = (e) => {
     e.preventDefault()
-    const selectedSub = this.state.subName.toLowerCase()
+    const selectedSub = e.target.value.toLowerCase()
     this.props.history.replace(selectedSub)
   }
 
