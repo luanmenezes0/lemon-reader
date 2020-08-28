@@ -5,22 +5,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { ThemeProvider } from '@material-ui/core';
 import theme from './theme';
-import { createStore, compose, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
-import postsReducer from './store/reducers/posts';
-import commentsReducer from './store/reducers/comments'
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const rootReducer = combineReducers({
-  posts: postsReducer,
-  comments: commentsReducer
-})
-
-const store = createStore(rootReducer, composeEnhancers(
-  applyMiddleware(thunk)
-));
+import store from '../src/redux/configStore';
 
 ReactDOM.render(
   <Provider store={store}>

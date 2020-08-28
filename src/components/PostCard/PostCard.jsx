@@ -5,96 +5,124 @@ import {
   CardContent,
   Typography,
   CardMedia,
-  Grid,
-  IconButton,
   Icon,
   Button,
+  CardActionArea,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import StarIcon from "@material-ui/icons/Star";
-import ThumbUpAltIcon from "@material-ui/icons/ThumbUpAlt";
-import ThumbDownAltIcon from "@material-ui/icons/ThumbDownAlt";
 import { Link, withRouter } from "react-router-dom";
-import { convertTimestamp } from '../../shared/utility';
+import { convertTimestamp, truncateString } from "../../shared/utility";
+import mascot from "../../assets/mascot.png";
 
 const useStyles = makeStyles((theme) => ({
-  media: {
-    height: "110px",
-    width: "110px",
+  root: {
+    height: "350px",
+    margin: "5px 0",
+    borderRadius: "5px",
   },
-  scoreArea: {
-    backgroundColor: "#F7FAEF",
-  },
-  postScore: {
-    display: "flex",
-    flexDirection: "column",
-    alignSelf: "center",
-    justifyContent: "space-between",
+  title: { fontWeight: "500" },
+  badge: {
+    backgroundColor: "#583c87",
+    padding: "1px 4px",
+    borderRadius: "5px",
+    color: "white",
+    fontSize: "0.9rem",
+    display: "inline-block",
+    boxSizing: "border-box",
+    marginBottom: "10px",
+    marginRight: "6px",
   },
   goldAwardIcon: {
     color: "yellow",
+    fontSize: "1rem",
+  },
+  linkButtom: {
+    color: "#583c87",
+  },
+  nsfw: {
+    backgroundColor: "red",
+    padding: "1px 4px",
+    borderRadius: "5px",
+    color: "white",
+    fontSize: "0.9rem",
+    display: "inline-block",
+    boxSizing: "border-box",
+    marginBottom: "10px",
   },
 }));
 
-
 const PostCard = (props) => {
+  const {
+    gilded,
+    thumbnail,
+    title,
+    subName,
+    subreddit_name_prefixed,
+    score,
+    created_utc,
+    history,
+    id,
+    over_18,
+    location,
+  } = props;
   const classes = useStyles();
 
-  let gildedPost = null;
-  if (props.gilded) {
-    gildedPost = (
-      <Icon>
-        <StarIcon className={classes.goldAwardIcon} />
-      </Icon>
-    );
-  }
+  const postImage = (thumbnail) => {
+    if (thumbnail === "default") {
+      return mascot;
+    }
+    if (thumbnail === "self") {
+      return mascot;
+    }
+    return thumbnail;
+  };
 
   return (
-    <Card style={{ border: 'solid 1px #F7FAEF', marginTop: '5px' }}>
-      <Grid container>
-        <Grid item xs={1} className={classes.scoreArea}>
-          <CardContent>
-            <CardActions className={classes.postScore}>
-              <IconButton>
-                <ThumbUpAltIcon />
-              </IconButton>
-              <Typography variant="caption">{props.upvotes}</Typography>
-              <IconButton>
-                <ThumbDownAltIcon />
-              </IconButton>
-            </CardActions>
-          </CardContent>
-        </Grid>
+    <Card className={classes.root}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          height="140"
+          image={postImage(thumbnail)}
+          title={title}
+        />
+        <CardContent>
+          <span className={classes.badge}>
+            <Link to={`${subName}`}>{subreddit_name_prefixed}</Link>
+          </span>
+          {over_18 ? <span className={classes.nsfw}>nsfw</span> : null}
+          {gilded ? (
+            <Icon
+              style={{
+                height: "1rem",
+                width: "1rem",
+                fontSize: "1rem",
+                marginLeft: "3px",
+              }}
+            >
+              <StarIcon className={classes.goldAwardIcon} />
+            </Icon>
+          ) : null}
+          <Typography className={classes.title} variant="body1" gutterBottom>
+            {truncateString(title, 80)}
+          </Typography>
+          <Typography color="textSecondary" variant="caption" component="p">
+            {score} points
+            {" • "}
+            {convertTimestamp(created_utc)} hours ago
+          </Typography>
+        </CardContent>
+      </CardActionArea>
 
-        <Grid item xs={9}>
-          <CardContent>
-            <Typography variant="h6">{props.title}</Typography>
-            <Typography variant="body2">
-              to <span style={{ color: 'purple' }}>r/<Link to={`${props.subName}`} >{props.url}</Link></span> by {props.author}
-              {gildedPost}
-            </Typography>
-
-            <Typography variant="body2">
-              {convertTimestamp(props.creationTime)} hours ago
-            </Typography>
-            <Button onClick={() => props.history.push(`${props.subName}/comments/${props.postId}`)}>
-              {props.numComments} comments
-            </Button>
-          </CardContent>
-        </Grid>
-
-        <Grid item xs={2}>
-          <CardContent>
-            {props.thumbnail ?
-              <CardMedia
-                className={classes.media}
-                image={props.thumbnail}
-                title={props.title}
-              />
-              : null}
-          </CardContent>
-        </Grid>
-      </Grid>
+      <CardActions>
+        <Button
+          className={classes.linkButtom}
+          onClick={() => history.push(`${location.pathname}comments/${id}`)}
+        >
+          GO TO COMMENTS
+        </Button>
+      </CardActions>
     </Card>
   );
 };

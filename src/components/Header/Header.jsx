@@ -10,8 +10,8 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-import { withRouter } from "react-router-dom";
-import { fetchPosts } from "../../store/actions/posts";
+import { withRouter, Link } from "react-router-dom";
+import { fetchPosts } from "../../redux/posts/actions";
 import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -68,19 +68,19 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const Header = () => {
+export const Header = (props) => {
   const classes = useStyles();
   const [subreddit, setSubreddit] = useState("");
 
   const inputHandler = (e) => {
-    e.preventDefault();
     setSubreddit(e.target.value);
   };
 
   const dispatch = useDispatch();
-  const onSearchSubreddit = (subreddit) => {
+  const onSearchSubreddit = (e) => {
+    e.preventDefault();
     dispatch(fetchPosts(subreddit, "hot"));
-    console.log(subreddit);
+    props.history.replace(`${props.match.path}r/${subreddit}/`);
   };
 
   return (
@@ -96,13 +96,13 @@ export const Header = () => {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" noWrap>
-            Lemon Reader
+            <Link to="/">Lemon Reader</Link>
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
             </div>
-            <form onSubmit={() => onSearchSubreddit(subreddit)}>
+            <form onSubmit={onSearchSubreddit}>
               <InputBase
                 placeholder="Search…"
                 classes={{
