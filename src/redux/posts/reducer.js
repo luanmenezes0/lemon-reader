@@ -1,67 +1,50 @@
+import { produce } from 'immer';
 import {
   FETCH_POSTS_START,
   FETCH_POSTS_SUCCESS,
   FETCH_POSTS_FAIL,
-  FETCH_SUBINFO_START,
   FETCH_SUBINFO_SUCCESS,
-  FETCH_SUBINFO_FAIL,
-  FETCH_POPULAR_SUBS_START,
-  FETCH_POPULAR_SUBS_SUCCESS,
-  FETCH_POPULAR_SUBS_FAIL,
-} from "./actionTypes";
-import { updateObject } from "../../shared/utility";
+} from './actionTypes';
 
 const initialState = {
-  subredditName: "",
-  sortBy: "",
+  subredditName: '',
+  sortBy: '',
   subredditInfo: {},
   posts: [],
-  popularSubreddits: [],
   loading: false,
   error: null,
 };
 
 const reducer = (state = initialState, action) => {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case FETCH_POSTS_START:
-      return updateObject(state, {
-        loading: true,
-        subredditName: action.subredditName,
-        sortBy: action.sortBy,
+      const { subredditName, sortBy } = payload;
+      return produce(state, (draft) => {
+        draft.loading = true;
+        draft.subredditName = subredditName;
+        draft.sortBy = sortBy;
       });
 
     case FETCH_POSTS_SUCCESS:
-      return updateObject(state, {
-        loading: false,
-        posts: action.posts,
+      const { posts } = payload;
+      return produce(state, (draft) => {
+        draft.loading = false;
+        draft.posts = posts;
       });
 
     case FETCH_POSTS_FAIL:
-      return updateObject(state, {
-        loading: false,
-        error: action.error,
+      const { error } = payload;
+      return produce(state, (draft) => {
+        draft.loading = false;
+        draft.error = error;
       });
-
-    case FETCH_SUBINFO_START:
-      return updateObject(state, { subredditName: action.subName });
 
     case FETCH_SUBINFO_SUCCESS:
-      return updateObject(state, { subredditInfo: action.subData });
-
-    case FETCH_SUBINFO_FAIL:
-      return updateObject(state, { error: action.err });
-
-    case FETCH_POPULAR_SUBS_START:
-      return updateObject(state, { loading: true });
-
-    case FETCH_POPULAR_SUBS_SUCCESS:
-      return updateObject(state, {
-        loading: false,
-        popularSubreddits: action.popSubList,
+      const { subData } = payload;
+      return produce(state, (draft) => {
+        draft.subredditInfo = subData;
       });
-
-    case FETCH_POPULAR_SUBS_FAIL:
-      return updateObject(state, { loading: false, error: action.payload });
 
     default:
       return state;

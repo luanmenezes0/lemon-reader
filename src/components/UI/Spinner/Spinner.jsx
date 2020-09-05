@@ -1,10 +1,13 @@
 import React from 'react';
 import styles from './Spinner.module.css';
+import { Box } from '@material-ui/core';
 
-const spinner = () => {
+const Spinner = () => {
   return (
-    <div className={styles.Loader}>Loading...</div>
-  )
-}
+    <Box height="100vh">
+      <div className={styles.loader}>Loading...</div>
+    </Box>
+  );
+};
 
-export default spinner;
+export default Spinner;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardActions,
@@ -8,47 +8,51 @@ import {
   Icon,
   Button,
   CardActionArea,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
-import StarIcon from "@material-ui/icons/Star";
-import { Link, withRouter } from "react-router-dom";
-import { convertTimestamp, truncateString } from "../../shared/utility";
-import mascot from "../../assets/mascot.png";
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
+import { format } from 'timeago.js';
+import StarIcon from '@material-ui/icons/Star';
+import { withRouter, useHistory } from 'react-router-dom';
+import { truncateString } from '../../shared/utility';
+import mascot from '../../assets/mascot.png';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: "350px",
-    margin: "5px 0",
-    borderRadius: "5px",
+    height: '350px',
+    margin: '5px 0',
+    borderRadius: '5px',
   },
-  title: { fontWeight: "500" },
+  title: { fontWeight: '500' },
   badge: {
-    backgroundColor: "#583c87",
-    padding: "1px 4px",
-    borderRadius: "5px",
-    color: "white",
-    fontSize: "0.9rem",
-    display: "inline-block",
-    boxSizing: "border-box",
-    marginBottom: "10px",
-    marginRight: "6px",
+    backgroundColor: '#583c87',
+    padding: '1px 4px',
+    borderRadius: '5px',
+    color: 'white',
+    fontSize: '0.9rem',
+    display: 'inline-block',
+    boxSizing: 'border-box',
+    marginBottom: '10px',
+    marginRight: '6px',
+  },
+  icon: {
+    height: '1rem',
+    width: '1rem',
+    fontSize: '1rem',
+    marginLeft: '3px',
   },
   goldAwardIcon: {
-    color: "yellow",
-    fontSize: "1rem",
-  },
-  linkButtom: {
-    color: "#583c87",
+    color: 'yellow',
+    fontSize: '1rem',
   },
   nsfw: {
-    backgroundColor: "red",
-    padding: "1px 4px",
-    borderRadius: "5px",
-    color: "white",
-    fontSize: "0.9rem",
-    display: "inline-block",
-    boxSizing: "border-box",
-    marginBottom: "10px",
+    backgroundColor: 'red',
+    padding: '1px 4px',
+    borderRadius: '5px',
+    color: 'white',
+    fontSize: '0.9rem',
+    display: 'inline-block',
+    boxSizing: 'border-box',
+    marginBottom: '10px',
   },
 }));
 
@@ -57,25 +61,23 @@ const PostCard = (props) => {
     gilded,
     thumbnail,
     title,
-    subName,
     subreddit_name_prefixed,
     score,
     created_utc,
-    history,
     id,
     over_18,
     location,
   } = props;
   const classes = useStyles();
 
+  const history = useHistory();
+
   const postImage = (thumbnail) => {
-    if (thumbnail === "default") {
+    if (thumbnail === 'default' || 'self' || '') {
       return mascot;
+    } else {
+      return thumbnail;
     }
-    if (thumbnail === "self") {
-      return mascot;
-    }
-    return thumbnail;
   };
 
   return (
@@ -88,36 +90,27 @@ const PostCard = (props) => {
           title={title}
         />
         <CardContent>
-          <span className={classes.badge}>
-            <Link to={`${subName}`}>{subreddit_name_prefixed}</Link>
-          </span>
+          <span className={classes.badge}>{subreddit_name_prefixed}</span>
           {over_18 ? <span className={classes.nsfw}>nsfw</span> : null}
           {gilded ? (
-            <Icon
-              style={{
-                height: "1rem",
-                width: "1rem",
-                fontSize: "1rem",
-                marginLeft: "3px",
-              }}
-            >
+            <Icon className={classes.icon}>
               <StarIcon className={classes.goldAwardIcon} />
             </Icon>
           ) : null}
           <Typography className={classes.title} variant="body1" gutterBottom>
-            {truncateString(title, 80)}
+            {truncateString(title, 75)}
           </Typography>
           <Typography color="textSecondary" variant="caption" component="p">
             {score} points
-            {" • "}
-            {convertTimestamp(created_utc)} hours ago
+            {' • '}
+            {format(created_utc * 1000)}
           </Typography>
         </CardContent>
       </CardActionArea>
 
       <CardActions>
         <Button
-          className={classes.linkButtom}
+          color="primary"
           onClick={() => history.push(`${location.pathname}comments/${id}`)}
         >
           GO TO COMMENTS

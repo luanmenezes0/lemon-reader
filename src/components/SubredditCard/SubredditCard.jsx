@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Card,
   CardActions,
@@ -8,24 +8,28 @@ import {
   Button,
   CardActionArea,
   makeStyles,
-} from "@material-ui/core";
-import { Link } from "react-router-dom";
-import { truncateString } from "../../shared/utility";
-import mascot from "../../assets/mascot.png";
+} from '@material-ui/core';
+import { Link } from 'react-router-dom';
+import { truncateString } from '../../shared/utility';
+import mascot from '../../assets/mascot.png';
 
 const useStyles = makeStyles({
   root: {
-    maxWidth: "360px",
-    minWidth: "270px",
-    height: "300px",
-    margin: "5px 0",
-    borderRadius: "5px",
+    maxWidth: '360px',
+    minWidth: '270px',
+    height: '300px',
+    margin: '5px 0',
+    borderRadius: '5px',
+  },
+  action: {
+    position: 'sticky',
+    bottom: '0px',
   },
 });
 
 const SubredditCard = (props) => {
   const classes = useStyles();
-  
+
   const {
     display_name_prefixed,
     public_description,
@@ -55,8 +59,8 @@ const SubredditCard = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions>
-        <Button color="secondary">
+      <CardActions className={classes.action}>
+        <Button color="primary">
           <Link to={url}>Explore</Link>
         </Button>
       </CardActions>

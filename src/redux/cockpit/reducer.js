@@ -1,13 +1,12 @@
 import { produce } from 'immer';
 import {
-  FETCH_COMMENTS_START,
-  FETCH_COMMENTS_SUCCESS,
-  FETCH_COMMENTS_FAIL,
+  FETCH_POPULAR_SUBS_START,
+  FETCH_POPULAR_SUBS_SUCCESS,
+  FETCH_POPULAR_SUBS_FAIL,
 } from './actionTypes';
 
 const initialState = {
-  postData: {},
-  commentData: [],
+  popularSubreddits: [],
   loading: false,
   error: null,
 };
@@ -15,24 +14,23 @@ const initialState = {
 const reducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case FETCH_COMMENTS_START:
+    case FETCH_POPULAR_SUBS_START:
       return produce(state, (draft) => {
         draft.loading = true;
       });
 
-    case FETCH_COMMENTS_SUCCESS:
-      const { postData, commentData } = payload;
+    case FETCH_POPULAR_SUBS_SUCCESS:
+      const { popSubList } = payload;
       return produce(state, (draft) => {
-        draft.postData = postData;
-        draft.commentData = commentData;
         draft.loading = false;
+        draft.popularSubreddits = popSubList;
       });
 
-    case FETCH_COMMENTS_FAIL:
-      const { err } = payload;
+    case FETCH_POPULAR_SUBS_FAIL:
+      const { error } = payload;
       return produce(state, (draft) => {
-        draft.error = err;
         draft.loading = false;
+        draft.error = error;
       });
 
     default:

@@ -1,35 +1,41 @@
-import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Grid } from "@material-ui/core";
-import Header from "./components/Header/Header";
-import Subreddit from "./containers/Subreddit/Subreddit";
-import Cockpit from "./containers/Cockpit/Cockpit";
-import Post from "./containers/Post/Post";
-import NotFound from "./components/NotFound/NotFound";
+import React, { lazy, Suspense } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import NotFound from './components/NotFound/NotFound';
+import Layout from './containers/Layout/Layout';
+import Spinner from './components/UI/Spinner/Spinner';
+
+const Post = lazy(() => {
+  return import('./containers/Post/Post');
+});
+
+const Cockpit = lazy(() => {
+  return import('./containers/Cockpit/Cockpit');
+});
+
+const Subreddit = lazy(() => {
+  return import('./containers/Subreddit/Subreddit');
+});
 
 const App = () => {
+  const routes = (
+    <Switch>
+      <Route
+        path="/r/:subreddit/comments/:postId"
+        component={(props) => <Post {...props} />}
+      />
+      <Route
+        path="/r/:subreddit"
+        component={(props) => <Subreddit {...props} />}
+      />
+      <Route path="/" component={(props) => <Cockpit {...props} />} />
+      <Route component={NotFound} />
+    </Switch>
+  );
+
   return (
-    <BrowserRouter>
-      <div>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Header />
-          </Grid>
-          <Grid item container>
-            <Grid item xs={1} />
-            <Grid item xs={10} container justify="center">
-              <Switch>
-                <Route path="/r/:subreddit/comments/:postId" component={Post} />
-                <Route path="/r/:subreddit" component={Subreddit} />
-                <Route path="/" component={Cockpit} />
-                <Route component={NotFound} />
-              </Switch>
-            </Grid>
-            <Grid item xs={1} />
-          </Grid>
-        </Grid>
-      </div>
-    </BrowserRouter>
+    <Suspense fallback={<Spinner />}>
+      <Layout routes={routes} />
+    </Suspense>
   );
 };
 

@@ -1,18 +1,16 @@
-import React from 'react'
-import { Container, Typography, Link } from '@material-ui/core';
+import React from 'react';
+import { Link } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 
 const NotFound = () => {
-
   return (
-    <Container>
-      <Typography align="center" variant="h4" gutterBottom>Not Found :(</Typography>
-      <Typography align="center" variant="h6">Are you sure you typed correctly?</Typography>
-      <Typography display="block" align="center" variant="button" style={{ paddingTop: '30px' }}>
-        <Link underline="hover" href="/">Take me to the front page!</Link>
-      </Typography>
+    <Alert severity="info">
+      Not Found. Are you sure you typed correctly?{' '}
+      <Link underline="hover" href="/">
+        Take me back to the front page!
+      </Link>
+    </Alert>
+  );
+};
 
-    </Container>
-  )
-}
-
-export default NotFound
+export default NotFound;

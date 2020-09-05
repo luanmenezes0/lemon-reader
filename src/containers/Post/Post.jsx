@@ -1,11 +1,12 @@
-import React, { useEffect, useCallback } from "react";
-import { Grid, Typography } from "@material-ui/core";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchComments } from "../../redux/comments/actions";
-import { convertTimestamp } from "../../shared/utility";
-import Spinner from "../../components/UI/Spinner/Spinner";
-import Comment from "../../components/Comment/Comment";
-import PostMedia from "../../components/PostCard/PostMedia/PostMedia";
+import React, { useEffect, useCallback } from 'react';
+import { Grid, Typography, Divider } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { useDispatch, useSelector } from 'react-redux';
+import { format } from 'timeago.js';
+import { fetchComments } from '../../redux/comments/actions';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import Comment from '../../components/Comment/Comment';
+import PostMedia from '../../components/PostCard/PostMedia/PostMedia';
 
 export const Post = (props) => {
   const { match } = props;
@@ -31,36 +32,37 @@ export const Post = (props) => {
   if (!loading && commentData !== null) {
     post = (
       <>
-        <article>
-          <Grid container spacing={2}>
-            <Grid item md={6}>
-              <Typography variant="h4">{postData.title}</Typography>
-              <Typography variant="body1">by {postData.author}</Typography>
-              <Typography variant="body1">
-                {" "}
-                {postData.subreddit_name_prefixed}
-              </Typography>
-              <Typography variant="body1">
-                {" "}
-                {convertTimestamp(postData.created_utc)} hours ago{" "}
-              </Typography>
-              <Typography variant="body1">
-                {" "}
-                {postData.num_comments} comments{" "}
-              </Typography>
-              <Typography variant="body1"> {postData.score} points </Typography>
-            </Grid>
-            <Grid item md={6}>
-              <PostMedia
-                domain={postData.domain}
-                desc={postData.title}
-                type={postData.post_hint}
-                source={postData.url}
-              />
-            </Grid>
+        <Grid container spacing={2} component="article">
+          <Grid item md={6}>
+            <Typography color="textPrimary" variant="h5" component="h1">
+              {postData.title}
+            </Typography>
+            <Typography color="textSecondary" variant="caption" component="p">
+              by {postData.author}
+            </Typography>
+            <Typography color="textSecondary" variant="caption" component="p">
+              {postData.subreddit_name_prefixed}
+            </Typography>
+            <Typography color="textSecondary" variant="caption" component="p">
+              {format(postData.created_utc * 1000)}
+            </Typography>
+            <Typography color="textSecondary" variant="caption" component="p">
+              {postData.num_comments} comments
+            </Typography>
+            <Typography color="textSecondary" variant="caption" component="p">
+              {postData.score} points
+            </Typography>
           </Grid>
-        </article>
-        <hr />
+          <Grid item md={6}>
+            <PostMedia
+              domain={postData.domain}
+              desc={postData.title}
+              type={postData.post_hint}
+              source={postData.url}
+            />
+          </Grid>
+        </Grid>
+        <Divider />
 
         {commentData.map((comment) => (
           <Comment {...comment.data} key={comment.data.id} />
@@ -70,17 +72,9 @@ export const Post = (props) => {
   }
 
   if (error) {
-    post = <Typography variant="body1">{error.message}</Typography>;
+    post = <Alert severity="error">{error.message}</Alert>;
   }
-  return (
-    <Grid item container>
-      <Grid item xs={2} />
-      <Grid item xs={8}>
-        {post}
-      </Grid>
-      <Grid item xs={2} />
-    </Grid>
-  );
+  return post;
 };
 
 export default Post;
